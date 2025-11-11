@@ -27,4 +27,5 @@ li {
     flex-grow: 1;
     border: 0;
     color: black;
+    width: 50%;
 }
