@@ -1,9 +1,13 @@
 import './App.css'
+import List from './components/List';
 
 function App() {
 
   return (
-    <h1>Chrome Extension using vite & react</h1>
+    <div className='container'>
+      <h1>YouTube Shit</h1>
+      <List />
+    </div>
   )
 }
 

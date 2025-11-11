@@ -21,6 +21,7 @@
     },
     "permissions": [
         "storage",
+        "activeTab",
         "tabs",
         "sidePanel",
         "commands",
