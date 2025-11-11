@@ -39,7 +39,7 @@ export function checkChannels(ul: HTMLUListElement) {
     (window as any).chrome.tabs.query({
         active: true,
         currentWindow: true
-    }, (tabs:  chrome.tabs.Tab[]) => {
+    }, (tabs: chrome.tabs.Tab[]) => {
         console.log("Execute Script", tabs);
         (window as any).chrome.scripting.executeScript({
             target: {
@@ -62,6 +62,43 @@ export function checkChannels(ul: HTMLUListElement) {
 
 }
 
+
+export async function getWebPageInfo(callback: () => any): Promise<any> {
+    const tabs = await chrome.tabs.query({
+        active: true,
+        currentWindow: true
+    });
+    const result = await chrome.scripting.executeScript({
+        target: {
+            tabId: tabs[0].id || 0
+        },
+        func: callback
+    });
+    return result[0].result;
+}
+
+
+
+
+
+export async function getChannelsLike(): Promise<string[]> {
+    const tabs: chrome.tabs.Tab[] = await chrome.tabs.query({
+        active: true,
+        currentWindow: true
+    });
+    const results = await chrome.scripting.executeScript<string[],unknown>({
+        target: {
+            tabId: tabs[0].id || 0
+        },
+        func: ():string[] => {
+            console.log("document = ", document);
+            return JSON.parse(localStorage.channels);
+        }
+    });
+    return (results[0].result as string[]);
+}
+
+
 function addRow(ul: HTMLUListElement, result: string) {
     const li = document.createElement('li');
 
@@ -70,7 +107,7 @@ function addRow(ul: HTMLUListElement, result: string) {
 }
 
 
-const $ = document.querySelector.bind(document);
+// const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
 function logit(...args: any[]) {
@@ -357,7 +394,7 @@ function saveTitle() {
     return currentTitle;
 }
 
-function isNewVideo(): boolean {
+/* function isNewVideo(): boolean {
     return (currentTitle !== getTitle());
 }
 
@@ -367,13 +404,13 @@ function removeAdRenderer() {
         adRenderer.remove();
     }
 }
-
+ */
 function removeAdRendererAll() {
     const nlAdRenderer = $$('#rendering-content');
     nlAdRenderer.forEach(adRenderer => { adRenderer.remove() });
 }
 
-function ExecuteOnEachAdRenderer(onElementExecute: (element: Element) => void) {
+/* function ExecuteOnEachAdRenderer(onElementExecute: (element: Element) => void) {
     const nlAdRenderer = $$('#rendering-content');
     nlAdRenderer.forEach(onElementExecute);
-}
+} */

@@ -2,7 +2,16 @@ body {
   margin: 0;
   display: flex;
   place-items: start;
-  width: 400px;
+  width: 600px;
   min-height: 600px;
   overflow: hidden;
+  background-color: rgba(0, 0, 0, 0);
+  border: 1px solid black;
+  border-radius: 15px;
+}
+
+#root {
+  display: flex;
+  flex-grow: 1;
+  min-height: 610px;
 }
