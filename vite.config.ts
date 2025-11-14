@@ -6,7 +6,8 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        side_panel: 'index.html'
+        side_panel: 'index.html',
+        background: "src/background/index.ts",
       },
       output: {
         entryFileNames: '[name].js'

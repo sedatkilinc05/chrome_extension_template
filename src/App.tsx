@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import './App.css'
-import { getChannelsLike } from "./helper/ChannelHelper";
+import { getChannelsLike, likeCurrentChannel } from "./helper/ChannelHelper";
 import List from './components/List';
 
 function App() {
 
   const [channels, setChannels] = useState<Array<string>>([]);
+  
 
 
   useEffect(() => {
+    
     getChannelsLike().then((arrChannelLike) => {
       console.log('data', arrChannelLike.length);
       setChannels([...channels, ...arrChannelLike]);
@@ -16,8 +18,9 @@ function App() {
   }, []);
 
 
-  const addChannel = () => {
-    const newChannel = `Channel ${channels.length + 1}`;
+   const addChannel = async () => {
+    const newChannel = await likeCurrentChannel();
+    console.log('newChannel', newChannel);
     setChannels([...channels, newChannel]);
   };
 
@@ -31,7 +34,7 @@ function App() {
           onClick={addChannel}
           className='btn-like'
         >
-          Add
+          Add Remove
         </button>
       </div>
     </div>

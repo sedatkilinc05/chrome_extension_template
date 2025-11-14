@@ -1,65 +1,117 @@
 
-
+/*
 interface Result {
     documentId: string;
     frameId: number;
     result: string;
 }
-const getDocumentTitle = (): string => {
-    console.log("getDocumentTitle() = ", document.title);
-
-    return document.title;
+*/
+export const OPT_LIKE = {
+    like: 'like',
+    dislike: 'dislike'
 }
 
-const getLocalStorage = () => {
+const arrLikeChannel: string[] = [];
+// const arrDislikeChannel : string[] = [];
+
+const getLocalStorage = (): string => {
     console.log("document = ", document, chrome);
     return localStorage.getItem("channels") || "[]";
 }
+
+const setLocalStorageChannel = (...args: string[]): string => {
+    console.log('sz_channel', args[0]);
+    localStorage.channels = args[0]
+    return localStorage.channels
+}
+
+function clickLikeButton(): string {
+    const btnLike: HTMLButtonElement = (document.querySelectorAll('#segmented-like-button ytd-toggle-button-renderer yt-button-shape button')[0] || document.querySelectorAll('.watch-active-metadata .ytd-toggle-button-renderer button#button.yt-icon-button')[0] || document.querySelectorAll('segmented-like-dislike-button-view-model like-button-view-model > toggle-button-view-model button')[0]) as HTMLButtonElement;
+    console.log('btnLike', btnLike);
+    if (btnLike === null)
+        return '';
+    btnLike.click();
+    return btnLike.ariaPressed?.toString() || '';
+}
+
+function clickDislikeButton(): string {
+    const btnDisLike: HTMLButtonElement = (
+        document.querySelector('#segmented-dislike-button ytd-toggle-button-renderer yt-button-shape button') ||
+        document.querySelectorAll('.watch-active-metadata .ytd-toggle-button-renderer button#button.yt-icon-button')[1] ||
+        document.querySelector('segmented-like-dislike-button-view-model dislike-button-view-model > toggle-button-view-model button')
+    ) as HTMLButtonElement;
+    console.log('btnDisLike', btnLike);
+    if (btnDisLike === null)
+        return '';
+    btnDisLike.click();
+    return btnDisLike.ariaPressed?.toString() || '';
+}
+
+
+async function clickLike(opts = OPT_LIKE.like) {
+    console.log('opts', opts);
+    if (opts === OPT_LIKE.like) {
+        return await executeScriptOnPage(clickLikeButton);
+    } else {
+        return await executeScriptOnPage(clickDislikeButton);
+    }
+}
+
+function getChannelLink(): string {
+    // const link2channel: HTMLAnchorElement = document.querySelector('#owner ytd-video-owner-renderer ytd-channel-name a') as HTMLAnchorElement;
+    const link2channel: HTMLLinkElement =  document.querySelector("a#header") as HTMLLinkElement;
+    console.log('link2channel', link2channel);
+    return link2channel.href || '';
+}
+
+export async function getChannelHandle():Promise<string> {
+    const link2channel:string = await executeScriptOnPage(getChannelLink)
+    console.log('link2channel', link2channel);
+    return link2channel.split('/').pop() ||'';
+}
+
+function addHandleToChannel(handle: string, arrChannel: string[]): string {
+    console.log('addHandleToChannel handle', handle, 'arrChannel', arrChannel);
+    arrChannel.push(handle);
+    return JSON.stringify(arrChannel);
+}
+
+async function updateLikeChannels(szLikeChannel: string) {
+    const szChannels = await executeScriptOnPage(setLocalStorageChannel, szLikeChannel);
+    console.log(szChannels);
+    return szChannels;
+}
+
+export async function likeCurrentChannel(): Promise<string> {
+    const pressed = await clickLike(OPT_LIKE.like);
+    console.log('pressed', pressed);
+    const channelHandle: string = await getChannelHandle();
+
+    const szLikeChannel = addHandleToChannel(channelHandle, arrLikeChannel);
+    const szChannels = await updateLikeChannels(szLikeChannel);
+    console.log('szChannels', szChannels);
+    return channelHandle
+}
+
 // Object.keys(localStorage)
-export function checkChannels(ul: HTMLUListElement) {
-    (window as any).chrome.tabs.query({
+
+
+async function executeScriptOnPage(callback: (...args: string[]) => string, ...args: string[]): Promise<string> {
+    const tabs = await chrome.tabs.query({
         active: true,
         currentWindow: true
-    }, (tabs: chrome.tabs.Tab[]) => {
-        console.log("Execute Script", tabs);
-        (window as any).chrome.scripting.executeScript({
-            target: {
-                tabId: tabs[0].id
-            },
-            func: getDocumentTitle
-        }, (results: Result[]) => {
-            console.log(`Recv result = ${results}`);
-            addRow(ul, results[0].result);
-        }
-        );
-    }
-    );
+    });
+
+    const result = await chrome.scripting.executeScript<string[], string>({
+        target: {
+            tabId: tabs[0].id || 0
+        },
+        func: callback,
+        args: args
+    });
 
 
-    (window as any).chrome.tabs.query({
-        active: true,
-        currentWindow: true
-    }, (tabs: chrome.tabs.Tab[]) => {
-        console.log("Execute Script", tabs);
-        (window as any).chrome.scripting.executeScript({
-            target: {
-                tabId: tabs[0].id
-            },
-            func: getLocalStorage
-        }, (result: [Result]) => {
-            console.log("XXX result = ", result[0].result);
-            localStorage.setItem('channels', result[0].result);
-            const arrChannel = JSON.parse(result[0].result);
-            arrChannel.forEach((c: string) => {
-                console.log("Channel", c);
-                addRow(ul, c);
-            });
-
-        }
-        );
-    }
-    );
-
+    return result[0].result as string;
 }
 
 
@@ -79,31 +131,28 @@ export async function getWebPageInfo(callback: () => any): Promise<any> {
 
 
 
-
-
 export async function getChannelsLike(): Promise<string[]> {
+    const szChannels = await executeScriptOnPage(getLocalStorage);
+    const result = JSON.parse(szChannels);
+    arrLikeChannel.push(...result);
+    return result || [];
+}
+
+export async function getChannelsLikeX(): Promise<string[]> {
     const tabs: chrome.tabs.Tab[] = await chrome.tabs.query({
         active: true,
         currentWindow: true
     });
-    const results = await chrome.scripting.executeScript<string[],unknown>({
+    const results = await chrome.scripting.executeScript<string[], unknown>({
         target: {
             tabId: tabs[0].id || 0
         },
-        func: ():string[] => {
+        func: (): string[] => {
             console.log("document = ", document);
             return JSON.parse(localStorage.channels);
         }
     });
     return (results[0].result as string[]);
-}
-
-
-function addRow(ul: HTMLUListElement, result: string) {
-    const li = document.createElement('li');
-
-    li.innerText = result;
-    ul.appendChild(li);
 }
 
 
