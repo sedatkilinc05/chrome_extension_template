@@ -6,7 +6,6 @@ import List from './components/List';
 function App() {
 
   const [channels, setChannels] = useState<Array<string>>([]);
-  
 
 
   useEffect(() => {
@@ -19,16 +18,17 @@ function App() {
 
 
    const addChannel = async () => {
-    const newChannel = await likeCurrentChannel();
-    if (newChannel === '') 
-      return;
-    console.log('newChannel', newChannel);
-    setChannels([...channels, newChannel]);
+    const arrNewChannel = await likeCurrentChannel();
+    console.log('newChannel', arrNewChannel);
+    setChannels(arrNewChannel);
   };
 
   return (
     <div className='container'>
-      <h1>YouTubers to like 👍🏽 & support</h1>
+      <div>
+        <h1>YouTubers to like 👍🏽 & support</h1>
+      </div>
+      
       <List channels={channels} />
       <div className='div-button'>
         <button

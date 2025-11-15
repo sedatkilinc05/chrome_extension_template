@@ -18,7 +18,7 @@ const List = ({ channels }: { channels: string[] }) => {
     });
     const containerElem = ulRef.current;
     const liElem = liRef.current;
-    
+
     if (liElem && containerElem) {
       liElem.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else if (containerElem) {
@@ -26,7 +26,7 @@ const List = ({ channels }: { channels: string[] }) => {
     }
 
 
-  }, [currentChannel]);
+  }, [channels]);
 
 
 

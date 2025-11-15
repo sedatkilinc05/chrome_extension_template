@@ -1,11 +1,5 @@
 
-/*
-interface Result {
-    documentId: string;
-    frameId: number;
-    result: string;
-}
-*/
+
 export const OPT_LIKE = {
     like: 'like',
     dislike: 'dislike'
@@ -59,23 +53,25 @@ async function clickLike(opts = OPT_LIKE.like) {
 
 function getChannelLink(): string {
     // const link2channel: HTMLAnchorElement = document.querySelector('#owner ytd-video-owner-renderer ytd-channel-name a') as HTMLAnchorElement;
-    const link2channel: HTMLLinkElement =  document.querySelector("a#header") as HTMLLinkElement;
+    const link2channel: HTMLLinkElement = document.querySelector("a#header") as HTMLLinkElement;
     console.log('link2channel', link2channel);
     return link2channel.href || '';
 }
 
-export async function getChannelHandle():Promise<string> {
-    const link2channel:string = await executeScriptOnPage(getChannelLink)
+export async function getChannelHandle(): Promise<string> {
+    const link2channel: string = await executeScriptOnPage(getChannelLink)
     console.log('link2channel', link2channel);
-    return link2channel.split('/').pop() ||'';
+    return link2channel.split('/').pop() || '';
 }
 
 function addHandleToChannel(handle: string, arrChannel: string[]): string {
     console.log('addHandleToChannel handle', handle, 'arrChannel', arrChannel);
     if (arrChannel.indexOf(handle) > -1) {
-            return '';
-        }
-    arrChannel.push(handle);
+        arrChannel.splice(arrChannel.indexOf(handle), 1);
+    } else {
+        arrChannel.push(handle);
+    }
+    console.log('updated arrChannel', arrChannel);
     return JSON.stringify(arrChannel);
 }
 
@@ -85,22 +81,16 @@ async function updateLikeChannels(szLikeChannel: string) {
     return szChannels;
 }
 
-export async function likeCurrentChannel(): Promise<string> {
+export async function likeCurrentChannel(): Promise<string[]> {
     const pressed = await clickLike(OPT_LIKE.like);
     console.log('pressed', pressed);
     const channelHandle: string = await getChannelHandle();
 
     const szLikeChannel = addHandleToChannel(channelHandle, arrLikeChannel);
-    if (szLikeChannel === '') {
-        return '';
-    }
     const szChannels = await updateLikeChannels(szLikeChannel);
-    console.log('szChannels', szChannels);
-    return channelHandle
+
+    return JSON.parse(szChannels) as string[];
 }
-
-// Object.keys(localStorage)
-
 
 async function executeScriptOnPage(callback: (...args: string[]) => string, ...args: string[]): Promise<string> {
     const tabs = await chrome.tabs.query({
@@ -144,32 +134,13 @@ export async function getChannelsLike(): Promise<string[]> {
     return result || [];
 }
 
-export async function getChannelsLikeX(): Promise<string[]> {
-    const tabs: chrome.tabs.Tab[] = await chrome.tabs.query({
-        active: true,
-        currentWindow: true
-    });
-    const results = await chrome.scripting.executeScript<string[], unknown>({
-        target: {
-            tabId: tabs[0].id || 0
-        },
-        func: (): string[] => {
-            console.log("document = ", document);
-            return JSON.parse(localStorage.channels);
-        }
-    });
-    return (results[0].result as string[]);
-}
-
-
-// const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
 function logit(...args: unknown[]) {
     console.log('[SEDAT•YouTube-Like]:', ...args);
 }
 
-logit('Start');
+logit('Start ChannelHelper');
 
 let pressedAltR = false;
 
@@ -449,23 +420,7 @@ function saveTitle() {
     return currentTitle;
 }
 
-/* function isNewVideo(): boolean {
-    return (currentTitle !== getTitle());
-}
-
-function removeAdRenderer() {
-    const adRenderer = $('#rendering-content');
-    if (adRenderer != null) {
-        adRenderer.remove();
-    }
-}
- */
 function removeAdRendererAll() {
     const nlAdRenderer = $$('#rendering-content');
     nlAdRenderer.forEach(adRenderer => { adRenderer.remove() });
 }
-
-/* function ExecuteOnEachAdRenderer(onElementExecute: (element: Element) => void) {
-    const nlAdRenderer = $$('#rendering-content');
-    nlAdRenderer.forEach(onElementExecute);
-} */
