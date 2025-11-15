@@ -13,7 +13,7 @@ function App() {
     
     getChannelsLike().then((arrChannelLike) => {
       console.log('data', arrChannelLike.length);
-      setChannels([...channels, ...arrChannelLike]);
+      setChannels((prevChannels) => [...prevChannels, ...arrChannelLike]);
     });
   }, []);
 

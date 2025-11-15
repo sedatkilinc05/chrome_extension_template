@@ -13,7 +13,6 @@ const List = ({ channels }: { channels: string[] }) => {
   useEffect(() => {
     getChannelHandle().then((channelHandle: string) => {
       console.log('fetched channel handle', channelHandle);
-      // arrHandle.push(channelHandle);
       setCurrentChannel(channelHandle);
     });
     const containerElem = ulRef.current;
@@ -30,7 +29,7 @@ const List = ({ channels }: { channels: string[] }) => {
     }
 
 
-  }, [channels]);
+  }, [currentChannel]);
 
 
 

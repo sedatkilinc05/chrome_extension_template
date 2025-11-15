@@ -115,7 +115,7 @@ async function executeScriptOnPage(callback: (...args: string[]) => string, ...a
 }
 
 
-export async function getWebPageInfo(callback: () => any): Promise<any> {
+export async function getWebPageInfo<T>(callback: () => T): Promise<T> {
     const tabs = await chrome.tabs.query({
         active: true,
         currentWindow: true
@@ -126,7 +126,7 @@ export async function getWebPageInfo(callback: () => any): Promise<any> {
         },
         func: callback
     });
-    return result[0].result;
+    return result[0].result as T;
 }
 
 
@@ -159,7 +159,7 @@ export async function getChannelsLikeX(): Promise<string[]> {
 // const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
-function logit(...args: any[]) {
+function logit(...args: unknown[]) {
     console.log('[SEDAT•YouTube-Like]:', ...args);
 }
 
