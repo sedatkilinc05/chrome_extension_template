@@ -26,7 +26,7 @@ function App() {
 
   return (
     <div className='container'>
-      <h1>YouTube Shit</h1>
+      <h1>YouTubers I like 👍🏽</h1>
       <List channels={channels} />
       <div className='div-button'>
         <button
@@ -34,7 +34,7 @@ function App() {
           onClick={addChannel}
           className='btn-like'
         >
-          Add Remove
+          Add 👍🏽 Remove
         </button>
       </div>
     </div>

@@ -1,39 +1,11 @@
 ul {
     overflow-y: scroll;
-    /* margin-left: auto;
-    margin-right: auto; */
+    padding: 0px;
     width: 70vb;
     flex-grow: 1;
     margin-top: 20px;
     scrollbar-width: none;
 }
 
-li {
-    list-style-type: none;
-    padding: 14px 8px;
-    margin-top: 5px;
-    border: 1px solid black;
-    border-radius: 12px;
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-    height: 25px;
-}
 
-li.channel-other {
-    background-color: gray;
-    box-shadow: 3px 7px 7px #444;
-    margin: 12px;
-}
 
-li.channel-current {
-    background-color: red;
-    border: 9px outset red;
-}
-
-.btn-channel {
-    flex-grow: 1;
-    border: 0;
-    color: black;
-    width: 50%;
-    background-color: transparent;
-}

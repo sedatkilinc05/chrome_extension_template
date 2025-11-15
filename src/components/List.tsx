@@ -2,6 +2,7 @@
 import { useRef, useEffect, useState } from "react";
 import { getChannelHandle } from "../helper/ChannelHelper";
 import "./List.css";
+import ListElement from "./ListElement";
 
 const List = ({ channels }: { channels: string[] }) => {
 
@@ -16,16 +17,12 @@ const List = ({ channels }: { channels: string[] }) => {
       setCurrentChannel(channelHandle);
     });
     const containerElem = ulRef.current;
-    if (containerElem) {
-      containerElem.scrollTop = containerElem.scrollHeight;
-    }
-
     const liElem = liRef.current;
+    
     if (liElem && containerElem) {
-      const scrollValue = liElem.getAttribute('data-scrollvalue');
-      if (scrollValue) {
-        containerElem.scrollTop = parseInt(scrollValue, 10) - 53;
-      }
+      liElem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else if (containerElem) {
+      containerElem.scrollTo({ top: containerElem.scrollHeight, behavior: 'smooth' });
     }
 
 
@@ -34,13 +31,7 @@ const List = ({ channels }: { channels: string[] }) => {
 
 
 
-  const handleChannel = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const channelId = event.currentTarget.id.split('/')[0];
-    const urlPart = channelId.startsWith('@') ? `${event.currentTarget.id}` : `channel/${event.currentTarget.id}`;
-    const channelUrl = `https://youtube.com/${urlPart}`
-    console.log('channel Url', channelUrl);
-    window.open(channelUrl, '_blank');
-  }
+
 
   return (
     <ul
@@ -49,16 +40,13 @@ const List = ({ channels }: { channels: string[] }) => {
     >
       {channels.map((channel: string, index: number) => {
         return (
-          <li
-            id={`key_${index}`}
-            className={(channel === currentChannel) ? 'channel-current' : 'channel-other'}
-            data-scrollvalue={65 * index}
-            key={crypto.randomUUID()}
-            ref={(channel === currentChannel) ? liRef : null}
-          >
-            <button type="button" id={channel} onClick={handleChannel} className="btn-channel">{channel}</button>
-            <button type="button" id={`${channel}/videos`} onClick={handleChannel} className="btn-channel">Videos</button>
-          </li>
+          <ListElement
+            channel={channel}
+            index={index}
+            key={crypto.randomUUID().toString()}
+            isCurrent={channel === currentChannel}
+            ref={channel === currentChannel ? liRef : undefined}
+          />
         )
       })}
     </ul >

@@ -121,7 +121,8 @@
 
     function getChannelName() {
         let channelName = '';
-        let allAnchorTagsChannelName = $$('ytd-video-owner-renderer.ytd-watch-metadata  > div.ytd-video-owner-renderer  > ytd-channel-name.ytd-video-owner-renderer  > div.ytd-channel-name  > div.ytd-channel-name  > yt-formatted-string.ytd-channel-name.complex-string  > a.yt-simple-endpoint.yt-formatted-string');
+        // let allAnchorTagsChannelName = $$('ytd-video-owner-renderer.ytd-watch-metadata  > div.ytd-video-owner-renderer  > ytd-channel-name.ytd-video-owner-renderer  > div.ytd-channel-name  > div.ytd-channel-name  > yt-formatted-string.ytd-channel-name.complex-string  > a.yt-simple-endpoint.yt-formatted-string');
+        let allAnchorTagsChannelName = $$('a#header');
         if (allAnchorTagsChannelName != 0 && allAnchorTagsChannelName.length > 0) {
             let arrChannelURL = allAnchorTagsChannelName[0].href.split('/');
             channelName = arrChannelURL.pop();
