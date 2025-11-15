@@ -1,11 +1,16 @@
 // import { useState } from "react";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getChannelHandle } from "../helper/ChannelHelper";
 import "./List.css";
 import ListElement from "./ListElement";
 
-const List = ({ channels }: { channels: string[] }) => {
+type ListProps = {
+  channels: string[];
+  classname: string;
+};
 
+// const List = ({ channels, classname }: {channels: string[], classname: string}) => {
+const List = ({channels, classname}: ListProps) => {
   const [currentChannel, setCurrentChannel] = useState<string>('');
 
   const ulRef = useRef<HTMLUListElement>(null);
@@ -35,7 +40,7 @@ const List = ({ channels }: { channels: string[] }) => {
 
   return (
     <ul
-      className="list-container"
+      className={`${classname} list-container`}
       ref={ulRef}
     >
       {channels.map((channel: string, index: number) => {

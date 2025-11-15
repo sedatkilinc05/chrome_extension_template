@@ -3,9 +3,24 @@ ul {
     padding: 0px;
     width: 70vb;
     flex-grow: 1;
-    margin-top: 20px;
-    scrollbar-width: none;
+    /* margin-top: 20px; */
+    border-radius: 15px;
+    border: 1px solid black;
+}
+
+ul.like-mode {
+    border: 1px solid black;
+    background-color: #5fb65f;
+    box-shadow: inset 4px 20px 20px 7px #000;
+}
+
+ul.dislike-mode {
+    border: 1px solid #5fb65f;
+    background-color: #000000;
+    box-shadow: inset 0px 3px 20px 20px #ff0042;
 }
 
 
-
+ul::-webkit-scrollbar {
+    display: none;
+}

@@ -14,16 +14,14 @@ li {
     align-content: center;
 }
 
-.dark-mode li  {
-        box-shadow: 5px 5px 20px 4px #ff0000;
+.dislike-mode li {
+    box-shadow: 0px 2px 20px 0px red;
+    margin-top: 26px;
 }
 
 
 li.channel-other {
-
     background-color: gray;
-    
-
 }
 
 li.channel-current {
@@ -45,7 +43,7 @@ li div {
     padding: 6px 0px;
 }
 
-.dark-mode li div {
+.dislike-mode li div {
     box-shadow: inset -5px 0px 20px 9px #433f3f;
 }
 

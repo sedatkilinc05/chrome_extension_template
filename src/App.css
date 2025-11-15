@@ -11,17 +11,56 @@
   align-items: center;
 }
 
-.btn-like {
-  background-color: rgb(25, 135, 84);
+h1 {
+  text-align: center;
+}
+
+h1.like-mode {
+  color: black;
+}
+
+
+h1.dislike-mode {
   color: white;
-  border: none;
-  padding: 12px 20px;
-  font-size: 15px;
-  border-radius: 10px;
-  cursor: pointer;
+}
+
+.btn {
   flex-grow: 1;
+  border: 0;
+  color: white;
+  width: 100%;
+  height: 40px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 5px;
+  border-radius: 8px;
 }
 
 .div-button {
   display: flex;
+  flex-direction: row;
+  width: 70vh;
+  align-items: center;
+}
+
+.div-button .btn {
+  align-items: baseline;
+}
+
+.btn-like {
+  background-color: rgb(25, 135, 84);
+  color: white;
+}
+
+.btn-toggle {
+  background-color: rgb(25, 135, 84);
+  color: white;
+  width: 30%;
+}
+
+.div-button svg {
+  pointer-events: none;
+  display: inherit;
+  width: 20%;
+  height: 100%;
 }

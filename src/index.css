@@ -3,9 +3,9 @@ body {
   display: flex;
   place-items: start;
   width: 600px;
-  min-height: 600px;
+  min-height: 611px;
   overflow: hidden;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   border-radius: 15px;
 }
 
@@ -13,13 +13,16 @@ body {
   display: flex;
   flex-grow: 1;
   min-height: 610px;
-  
 }
 
-#root.day-mode {
+#root.like-mode {
   background-color: #b9da6d;
 }
 
-#root.dark-mode {
+#root.dislike-mode {
   background-color: rgba(0, 0, 0);
+}
+
+button {
+  cursor: pointer;
 }

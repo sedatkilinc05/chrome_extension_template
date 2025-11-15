@@ -8,9 +8,9 @@ export const OPT_LIKE = {
 const arrLikeChannel: string[] = [];
 // const arrDislikeChannel : string[] = [];
 
-const getLocalStorage = (): string => {
+const getLocalStorage = (channel: string): string => {
     console.log("document = ", document, chrome);
-    return localStorage.getItem("channels") || "[]";
+    return localStorage.getItem(channel) || "[]";
 }
 
 const setLocalStorageChannel = (...args: string[]): string => {
@@ -127,12 +127,15 @@ export async function getWebPageInfo<T>(callback: () => T): Promise<T> {
 
 
 
-export async function getChannelsLike(): Promise<string[]> {
-    const szChannels = await executeScriptOnPage(getLocalStorage);
+export async function getChannels(channel: string): Promise<string[]> {
+    console.log('channel', channel);
+    const szChannels = await executeScriptOnPage(getLocalStorage, channel);
     const result = JSON.parse(szChannels);
     arrLikeChannel.push(...result);
     return result || [];
 }
+
+/////////////////////////////////////////////////
 
 const $$ = document.querySelectorAll.bind(document);
 
