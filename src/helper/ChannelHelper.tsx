@@ -72,6 +72,9 @@ export async function getChannelHandle():Promise<string> {
 
 function addHandleToChannel(handle: string, arrChannel: string[]): string {
     console.log('addHandleToChannel handle', handle, 'arrChannel', arrChannel);
+    if (arrChannel.indexOf(handle) > -1) {
+            return '';
+        }
     arrChannel.push(handle);
     return JSON.stringify(arrChannel);
 }
@@ -88,6 +91,9 @@ export async function likeCurrentChannel(): Promise<string> {
     const channelHandle: string = await getChannelHandle();
 
     const szLikeChannel = addHandleToChannel(channelHandle, arrLikeChannel);
+    if (szLikeChannel === '') {
+        return '';
+    }
     const szChannels = await updateLikeChannels(szLikeChannel);
     console.log('szChannels', szChannels);
     return channelHandle

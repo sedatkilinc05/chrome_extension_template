@@ -20,13 +20,15 @@ function App() {
 
    const addChannel = async () => {
     const newChannel = await likeCurrentChannel();
+    if (newChannel === '') 
+      return;
     console.log('newChannel', newChannel);
     setChannels([...channels, newChannel]);
   };
 
   return (
     <div className='container'>
-      <h1>YouTubers I like 👍🏽</h1>
+      <h1>YouTubers to like 👍🏽 & support</h1>
       <List channels={channels} />
       <div className='div-button'>
         <button
