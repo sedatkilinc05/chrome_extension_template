@@ -19,6 +19,20 @@ const setLocalStorageChannel = (...args: string[]): string => {
     return localStorage.channels
 }
 
+function isClip(): boolean {
+    let is_clip = false;
+    const result = location.href.match('watch');
+    if (result != null && result.length > 0) { is_clip = true; };
+    return is_clip;
+}
+
+function isShorts(): boolean {
+    let isShort = false;
+    const result = location.href.match('shorts');
+    if (result != null && result.length > 0) { isShort = true; };
+    return isShort;
+}
+
 function clickLikeButton(): string {
     const btnLike: HTMLButtonElement = (document.querySelectorAll('#segmented-like-button ytd-toggle-button-renderer yt-button-shape button')[0] || document.querySelectorAll('.watch-active-metadata .ytd-toggle-button-renderer button#button.yt-icon-button')[0] || document.querySelectorAll('segmented-like-dislike-button-view-model like-button-view-model > toggle-button-view-model button')[0]) as HTMLButtonElement;
     console.log('btnLike', btnLike);
@@ -34,7 +48,7 @@ function clickDislikeButton(): string {
         document.querySelectorAll('.watch-active-metadata .ytd-toggle-button-renderer button#button.yt-icon-button')[1] ||
         document.querySelector('segmented-like-dislike-button-view-model dislike-button-view-model > toggle-button-view-model button')
     ) as HTMLButtonElement;
-    console.log('btnDisLike', btnLike);
+    console.log('btnDisLike', btnDisLike);
     if (btnDisLike === null)
         return '';
     btnDisLike.click();
@@ -55,13 +69,13 @@ function getChannelLink(): string {
     // const link2channel: HTMLAnchorElement = document.querySelector('#owner ytd-video-owner-renderer ytd-channel-name a') as HTMLAnchorElement;
     const link2channel: HTMLLinkElement = document.querySelector("a#header") as HTMLLinkElement;
     console.log('link2channel', link2channel);
-    return link2channel.href || '';
+    return link2channel?.href || '';
 }
 
 export async function getChannelHandle(): Promise<string> {
     const link2channel: string = await executeScriptOnPage(getChannelLink)
     console.log('link2channel', link2channel);
-    return link2channel.split('/').pop() || '';
+    return link2channel?.split('/').pop() || '';
 }
 
 function addHandleToChannel(handle: string, arrChannel: string[]): string {
@@ -81,11 +95,21 @@ async function updateLikeChannels(szLikeChannel: string) {
     return szChannels;
 }
 
+export async function isCurrentPageVideoClip(): Promise<boolean> {
+    const is_clip = await getWebPageInfo(isClip)
+    return is_clip;
+}
+
+export async function isCurrentPageShorts(): Promise<boolean> {
+    const is_shorts = await getWebPageInfo(isShorts)
+    return is_shorts;
+}
+
 export async function likeCurrentChannel(): Promise<string[]> {
     const pressed = await clickLike(OPT_LIKE.like);
     console.log('pressed', pressed);
     const channelHandle: string = await getChannelHandle();
-
+    console.log('likeCurrentChannel: arrLikeChannel', arrLikeChannel);
     const szLikeChannel = addHandleToChannel(channelHandle, arrLikeChannel);
     const szChannels = await updateLikeChannels(szLikeChannel);
 
@@ -137,37 +161,37 @@ export async function getChannels(channel: string): Promise<string[]> {
 
 /////////////////////////////////////////////////
 
-const $$ = document.querySelectorAll.bind(document);
+// const $$ = document.querySelectorAll.bind(document);
 
-function logit(...args: unknown[]) {
+/* function logit(...args: unknown[]) {
     console.log('[SEDAT•YouTube-Like]:', ...args);
-}
+} */
 
-logit('Start ChannelHelper');
+// logit('Start ChannelHelper');
 
-let pressedAltR = false;
+// let pressedAltR = false;
 
-let btnLike: HTMLButtonElement;
-let btnDisLike: HTMLButtonElement;
+// let btnLike: HTMLButtonElement;
+// let btnDisLike: HTMLButtonElement;
 
 // const arrEventType: string[] = [ 'loadstart', 'play', 'playing', 'load', 'selectionchange', 'canplay', 'change', 'slotchange' ];
-const arrChannels: string[] = [];
-const arrDislikeChannels: string[] = [];
+// const arrChannels: string[] = [];
+// const arrDislikeChannels: string[] = [];
 
-let currentChannel = '';
-let currentTitle = getTitle();
+// let currentChannel = '';
+// let currentTitle = getTitle();
 
-if (localStorage.getItem('channels') === null) {
+/* if (localStorage.getItem('channels') === null) {
     saveChannel('@SedatKPunkt');
     saveChannel('@garipthecat2067');
 } else {
     arrChannels.push(...JSON.parse(localStorage.getItem('channels') || ''))
 }
-
-if (localStorage.getItem('dislikechannels') !== null) {
+ */
+/* if (localStorage.getItem('dislikechannels') !== null) {
     arrDislikeChannels.push(...JSON.parse(localStorage.getItem('dislikechannels') || ''))
-}
-
+} */
+/* 
 const loadListener = (ev: Event) => {
     logit(' Event ' + ev.type + '•' + ev.target + '.addEventListener', ev);
     findChannelName(ev.target + '.' + ev.type);
@@ -257,14 +281,14 @@ function findChannelName(from = 'default') {
         }
         found = true;
     }
-}
+} */
 
-function foundChannelName(): boolean {
+/* function foundChannelName(): boolean {
     currentChannel = isShorts() ? getChannelNameShorts() : getChannelName();
     return currentChannel !== '';
-}
+} */
 
-function getChannelName(): string {
+/* function getChannelName(): string {
     let channelName = '';
     const allAnchorTagsChannelName: NodeListOf<HTMLAnchorElement> = $$('ytd-video-owner-renderer.ytd-watch-metadata  > div.ytd-video-owner-renderer  > ytd-channel-name.ytd-video-owner-renderer  > div.ytd-channel-name  > div.ytd-channel-name  > yt-formatted-string.ytd-channel-name.complex-string  > a.yt-simple-endpoint.yt-formatted-string');
     if (allAnchorTagsChannelName !== undefined && allAnchorTagsChannelName.length > 0) {
@@ -272,8 +296,8 @@ function getChannelName(): string {
         channelName = arrChannelURL.pop() || '';
     }
     return channelName;
-}
-
+} */
+/* 
 function getChannelNameShorts(): string {
     let channelName = '';
     const allAnchorTagsChannelName: NodeListOf<HTMLAnchorElement> = $$('yt-reel-channel-bar-view-model a');
@@ -287,8 +311,8 @@ function getChannelNameShorts(): string {
     }
     return channelName;
 }
-
-function lookForLikeButton(action: number, prevState = false) {
+ */
+/* function lookForLikeButton(action: number, prevState = false) {
     logit('lookForLikeButton', 'action = ' + action);
 
     if (isShorts()) { setLikeDisLikeButtonsShorts() } else { setLikeDislikeButtons() }
@@ -315,8 +339,8 @@ function lookForLikeButton(action: number, prevState = false) {
                 break;
         }
     }
-}
-
+} */
+/* 
 function setLikeDislikeButtons() {
     const tmpBtnLike = ($$('#segmented-like-button ytd-toggle-button-renderer yt-button-shape button')[0])
         || $$('.watch-active-metadata .ytd-toggle-button-renderer button#button.yt-icon-button')[0]
@@ -335,14 +359,9 @@ function setLikeDisLikeButtonsShorts() {
     const tmpBtnDislike = arrButtons[1];
     btnDisLike = tmpBtnDislike as HTMLButtonElement;
 }
+ */
 
-function isShorts() {
-    let isShort = false;
-    const result = location.href.match('shorts');
-    if (result != null && result.length > 0) { isShort = true; };
-    return isShort;
-}
-
+/* 
 function handleChannel(channelName: string, like: boolean) {
     if (channelName === "") {
         return;
@@ -363,24 +382,24 @@ function handleChannel(channelName: string, like: boolean) {
         lookForLikeButton(2, true);
     }
 }
-
-function saveChannel(channelName: string) {
+ */
+/* function saveChannel(channelName: string) {
     if (arrChannels.indexOf(channelName) > -1) {
         return;
     }
     arrChannels.push(channelName);
     localStorage.setItem('channels', JSON.stringify(arrChannels));
-}
+} */
 
-function saveDislikeChannel(channelName: string) {
+/* function saveDislikeChannel(channelName: string) {
     if (arrDislikeChannels.indexOf(channelName) > -1) {
         return;
     }
     arrDislikeChannels.push(channelName);
     localStorage.setItem('dislikechannels', JSON.stringify(arrDislikeChannels));
-}
+} */
 
-function resetLikedChannels() {
+/* function resetLikedChannels() {
     arrChannels.splice(0, arrChannels.length);
     localStorage.setItem('channels', JSON.stringify(arrChannels));
     saveChannel('@SedatKPunkt');
@@ -390,9 +409,9 @@ function resetLikedChannels() {
 function resetDislikedChannels() {
     arrDislikeChannels.splice(0, arrDislikeChannels.length);
     localStorage.setItem('dislikechannels', JSON.stringify(arrDislikeChannels));
-}
+} */
 
-function resetAllChannels() {
+/* function resetAllChannels() {
     resetLikedChannels();
     resetDislikedChannels();
 }
@@ -411,13 +430,13 @@ function removeDislikeChannel(channelName: string) {
     }
     arrDislikeChannels.splice(arrDislikeChannels.indexOf(channelName), 1);
     localStorage.setItem('dislikechannels', JSON.stringify(arrDislikeChannels));
-}
-
+} */
+/* 
 function getTitle() {
     return document.title.replace(/^\(\d*\)\s/, '');
 }
-
-function saveTitle() {
+ */
+/* function saveTitle() {
     currentTitle = getTitle();
     logit(' saveTitle• CurrentTitle', currentTitle);
     return currentTitle;
@@ -427,3 +446,4 @@ function removeAdRendererAll() {
     const nlAdRenderer = $$('#rendering-content');
     nlAdRenderer.forEach(adRenderer => { adRenderer.remove() });
 }
+ */

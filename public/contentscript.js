@@ -30,7 +30,10 @@
         arrChannels.push(...JSON.parse(localStorage.getItem('channels')))
     }
 
-    if (localStorage.getItem('dislikechannels') !== null) {
+    if (localStorage.getItem('dislikechannels') === null) {
+        saveDislikeChannel('@RealTime');
+        saveDislikeChannel('@WELTVideoTV');
+    } else {
         arrDislikeChannels.push(...JSON.parse(localStorage.getItem('dislikechannels')))
     }
 

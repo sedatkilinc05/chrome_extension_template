@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css'
-import { getChannels, likeCurrentChannel } from './helper/ChannelHelper';
+import { getChannels, likeCurrentChannel, isCurrentPageVideoClip } from './helper/ChannelHelper';
 import List from './components/List';
 
 function App() {
@@ -19,6 +19,9 @@ function App() {
 
 
   const addChannel = async () => {
+    const isClip = await isCurrentPageVideoClip();
+    if (!isClip)
+      return;
     const arrNewChannel = await likeCurrentChannel();
     console.log('newChannel', arrNewChannel);
     setChannels(arrNewChannel);
