@@ -175,3 +175,16 @@ export async function getChannels(channel: string): Promise<string[]> {
     const result = JSON.parse(szChannels);
     return result || [];
 }
+
+export async function exportChannels(isLike: boolean) {
+    const szChannels = await executeScriptOnPage(getLocalStorage, isLike ? 'channels' : 'dislikechannels');
+
+    await navigator.clipboard.writeText(szChannels);
+}
+
+export async function importChannels(isLike: boolean): Promise<string[]> {
+    const szChannels = await navigator.clipboard.readText();
+    const szChannelsUpdated = await updateChannels(szChannels, isLike ? 'channels' : 'dislikechannels');
+
+    return JSON.parse(szChannelsUpdated) as string[];
+}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css'
-import { getChannels, handleCurrentChannel, isCurrentPageVideoClip } from './helper/ChannelHelper';
+import { getChannels, handleCurrentChannel, isCurrentPageVideoClip, exportChannels, importChannels } from './helper/ChannelHelper';
 import List from './components/List';
 
 function App() {
@@ -26,6 +26,15 @@ function App() {
     console.log('newChannel', arrNewChannel);
     setChannels(arrNewChannel);
     // setIsLikeList(isLikeList)
+  };
+
+  const exportCurrentChannels = async () => {
+    await exportChannels(isLikeList)
+  };
+
+  const importCurrentChannels = async () => {
+    const result = await importChannels(isLikeList);
+    setChannels(result);
   };
 
   const toggleList = () => {
@@ -61,6 +70,18 @@ function App() {
           className='btn btn-like'
         >
            {isLikeList ? '👍🏻 Add 👍🏽 Remove 👍🏻' : '👎 Add 👎🏻 Remove 👎'} 
+        </button>
+        <button
+          type='button'
+          onClick={exportCurrentChannels}
+        >
+          Export Channels {isLikeList ? '👍🏻' : '👎🏻'}
+        </button>
+        <button
+          type='button'
+          onClick={importCurrentChannels}
+        >
+          Import Channels {isLikeList ? '👍🏻' : '👎🏻'}
         </button>
       </div>
     </div>
