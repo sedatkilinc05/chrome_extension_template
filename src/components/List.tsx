@@ -25,8 +25,10 @@ const List = ({channels, classname}: ListProps) => {
     const liElem = liRef.current;
 
     if (liElem && containerElem) {
+      containerElem.scrollTop = 0;
       liElem.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else if (containerElem) {
+      containerElem.scrollTop = 0;
       containerElem.scrollTo({ top: containerElem.scrollHeight, behavior: 'smooth' });
     }
 
