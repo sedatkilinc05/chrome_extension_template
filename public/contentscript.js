@@ -16,7 +16,6 @@
     let btnLike = undefined;
     let btnDisLike = undefined;
 
-    const arrEventType = [ 'loadstart', 'play', 'playing', 'load', 'selectionchange', 'canplay', 'change', 'slotchange' ];
     const arrChannels = [ ];
     const arrDislikeChannels = [ ];
 
@@ -38,14 +37,14 @@
     }
 
     const loadListener = (ev) => {
-        logit(' Event '+ ev.type + '•' + ev.target + '.addEventListener',ev);
+        //logit(' Event '+ ev.type + '•' + ev.target + '.addEventListener',ev);
         findChannelName(ev.target + '.' + ev.type);
         lookForLikeButton(0);
         removeAdRendererAll();
     }
 
     const keyUpListener = ev => {
-        logit('keyup event object', ev);
+        //logit('keyup event object', ev);
 
         findChannelName('onkeyup');
 
@@ -53,7 +52,7 @@
             return;
         };
 
-        logit('alt key down', ev);
+        //logit('alt key down', ev);
 
         switch (ev.code) {
             case 'KeyL':
@@ -64,18 +63,15 @@
                 pressedAltR = true;
                 break;
             case 'KeyA':
-                pressedAltR && resetAllChannels();
-                (pressedAltR) ? logit('all DISLIKED-channels reseted', localStorage.channels, localStorage.dislikechannels) : logit('Press Alt-R then Alt-A to delete all channels');
+                if (pressedAltR) resetAllChannels();
                 pressedAltR = false;
                 break;
             case 'KeyC':
-                pressedAltR && resetLikedChannels();
-                (pressedAltR) ? logit('all DISLIKED-channels reseted', localStorage.channels, localStorage.dislikechannels) : logit('Press Alt-R then Alt-C to delete all LIKE-channels');
+                if (pressedAltR) resetLikedChannels();
                 pressedAltR = false;
                 break;
             case 'KeyD':
-                pressedAltR && resetDislikedChannels();
-                (pressedAltR) ? logit('all DISLIKED-channels reseted', localStorage.channels, localStorage.dislikechannels) : logit('Press Alt-R then Alt-D to delete all DISLIKE-channels');
+                if (pressedAltR) resetDislikedChannels();
                 pressedAltR = false;
                 break;
             default:
@@ -92,21 +88,21 @@
     document.addEventListener('keyup', keyUpListener);
 
     function findChannelName(from = 'default') {
-        logit('findChannelName', from);
+        //logit('findChannelName', from);
         let found = false;
 
         currentTitle = getTitle();
-        logit('currentTitle', currentTitle);
-        logit('saveTitle', saveTitle());
+        //logit('currentTitle', currentTitle);
+        //logit('saveTitle', saveTitle());
 
         let allAnchorTagsChannel = $$('a[href^="/c"]');
-        logit('allAnchorTagsChannel.length', allAnchorTagsChannel.length);
+        //logit('allAnchorTagsChannel.length', allAnchorTagsChannel.length);
 
         let allAnchorTagsChannelName = $$('ytd-video-owner-renderer.ytd-watch-metadata  > div.ytd-video-owner-renderer  > ytd-channel-name.ytd-video-owner-renderer  > div.ytd-channel-name  > div.ytd-channel-name  > yt-formatted-string.ytd-channel-name.complex-string  > a.yt-simple-endpoint.yt-formatted-string');
-        logit('allAnchorTagsChannelName.length', allAnchorTagsChannelName.length);
+        //logit('allAnchorTagsChannelName.length', allAnchorTagsChannelName.length);
 
         if (!found && foundChannelName()) {
-            logit('currentChannel', currentChannel);
+            //logit('currentChannel', currentChannel);
             if (arrChannels.indexOf(currentChannel) > -1) {
                 lookForLikeButton(1);
             }
@@ -118,15 +114,15 @@
     }
 
     function foundChannelName() {
-        isShorts() ? currentChannel = getChannelNameShorts() : currentChannel = getChannelName();
-        return currentChannel != '';
+        currentChannel = isShorts() ? getChannelNameShorts() : getChannelName();
+        return currentChannel !== '';
     }
 
     function getChannelName() {
         let channelName = '';
         // let allAnchorTagsChannelName = $$('ytd-video-owner-renderer.ytd-watch-metadata  > div.ytd-video-owner-renderer  > ytd-channel-name.ytd-video-owner-renderer  > div.ytd-channel-name  > div.ytd-channel-name  > yt-formatted-string.ytd-channel-name.complex-string  > a.yt-simple-endpoint.yt-formatted-string');
         let allAnchorTagsChannelName = $$('a#header');
-        if (allAnchorTagsChannelName != 0 && allAnchorTagsChannelName.length > 0) {
+        if (allAnchorTagsChannelName !== 0 && allAnchorTagsChannelName.length > 0) {
             let arrChannelURL = allAnchorTagsChannelName[0].href.split('/');
             channelName = arrChannelURL.pop();
         }
@@ -140,7 +136,7 @@
             //channelName = allAnchorTagsChannelName[0].href.replace(location.protocol+'//'+location.host+'/', '').replace('/shorts', '');
             let arrChannelURL = allAnchorTagsChannelName[0].href.split('/');
             channelName = arrChannelURL.pop();
-            if(channelName == 'shorts') {
+            if(channelName === 'shorts') {
                 channelName = arrChannelURL.pop();
             }
         }
@@ -148,29 +144,29 @@
     }
 
     function lookForLikeButton(action, prevState = false) {
-        logit('lookForLikeButton', 'action = ' + action);
+        //logit('lookForLikeButton', 'action = ' + action);
 
         isShorts() ? setLikeDisLikeButtonsShorts() : setLikeDislikeButtons()
 
         if (btnLike && btnDisLike) {
-            logit('btnLike = ', btnLike, "btnDisLike", btnDisLike);
+            //logit('btnLike = ', btnLike, "btnDisLike", btnDisLike);
             switch(action) {
                 case 1:
-                    logit('lookForLikeButton • btnLike is', btnLike.firstChild.firstChild.classList.contains('style-default-active'));;
+                    //logit('lookForLikeButton • btnLike is', btnLike.firstChild.firstChild.classList.contains('style-default-active'));;
                     if (btnLike.ariaPressed === prevState.toString()) {
 
                         btnLike.click();
                     }
                     break;
                 case 2:
-                    logit('lookForDisLikeButton • btnDisLike is', btnLike.firstChild.firstChild.classList.contains('style-default-active'));;
+                    //logit('lookForDisLikeButton • btnDisLike is', btnLike.firstChild.firstChild.classList.contains('style-default-active'));;
                     if (btnDisLike.ariaPressed === prevState.toString()) {
 
                         btnDisLike.click();
                     }
                     break;
                 default:
-                    logit('lookForLikeButton • 1 btnLike is', btnLike.firstChild.firstChild.classList.contains('style-default-active'));
+                    //logit('lookForLikeButton • 1 btnLike is', btnLike.firstChild.firstChild.classList.contains('style-default-active'));
                     break;
             }
         }
@@ -272,30 +268,9 @@
         return document.title.replace(/^\(\d*\)\s/,'');
     }
 
-    function saveTitle() {
-        currentTitle = getTitle() ;
-        logit(' saveTitle• CurrentTitle', currentTitle);
-        return currentTitle;
-    }
-
-    function isNewVideo() {
-        return (currentTitle !== getTitle());
-    }
-
-    function removeAdRenderer() {
-        let adRenderer = $('#rendering-content');
-        if (adRenderer != null) {
-            adRenderer.remove();
-        }
-    }
-
     function removeAdRendererAll() {
         let nlAdRenderer = $$('#rendering-content');
         nlAdRenderer.forEach(adRenderer => adRenderer.remove());
     }
 
-    function ExecuteOnEachAdRenderer(onElementExecute) {
-        let nlAdRenderer = $$('#rendering-content');
-        nlAdRenderer.forEach(onElementExecute);
-    }
 })();

@@ -13,7 +13,7 @@ const ListElement = forwardRef<HTMLLIElement, ListElementProp>(({ channel, index
         const channelId = event.currentTarget.id.split('/')[0];
         const urlPart = channelId.startsWith('@') ? `${event.currentTarget.id}` : `channel/${event.currentTarget.id}`;
         const channelUrl = `https://youtube.com/${urlPart}`
-        console.log('channel Url', channelUrl);
+        
         window.open(channelUrl, '_blank');
     }
 

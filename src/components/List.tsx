@@ -18,7 +18,7 @@ const List = ({channels, classname}: ListProps) => {
 
   useEffect(() => {
     getChannelHandle().then((channelHandle: string) => {
-      console.log('fetched channel handle', channelHandle);
+      
       setCurrentChannel(channelHandle);
     });
     const containerElem = ulRef.current;

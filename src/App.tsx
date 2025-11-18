@@ -10,9 +10,9 @@ function App() {
 
 
   useEffect(() => {
-    console.log('isLikeList', isLikeList);
+    
     getChannels(isLikeList ? 'channels' : 'dislikechannels').then((arrChannelLike) => {
-      console.log('array', arrChannelLike, arrChannelLike.length);
+      
       setChannels(arrChannelLike);
     });
   }, [isLikeList]);
@@ -23,7 +23,7 @@ function App() {
     if (!isClip)
       return;
     const arrNewChannel = await handleCurrentChannel(channels, isLikeList);
-    console.log('newChannel', arrNewChannel);
+    
     setChannels(arrNewChannel);
     // setIsLikeList(isLikeList)
   };
