@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css'
-import { getChannels, likeCurrentChannel, isCurrentPageVideoClip } from './helper/ChannelHelper';
+import { getChannels, handleCurrentChannel, isCurrentPageVideoClip } from './helper/ChannelHelper';
 import List from './components/List';
 
 function App() {
@@ -22,14 +22,16 @@ function App() {
     const isClip = await isCurrentPageVideoClip();
     if (!isClip)
       return;
-    const arrNewChannel = await likeCurrentChannel();
+    const arrNewChannel = await handleCurrentChannel(channels, isLikeList);
     console.log('newChannel', arrNewChannel);
     setChannels(arrNewChannel);
+    // setIsLikeList(isLikeList)
   };
 
   const toggleList = () => {
-    setIsLikeList(!isLikeList);
-    document.querySelector('#root')?.setAttribute('class', isLikeList ? 'dislike-mode' : 'like-mode');
+    const newState = !isLikeList
+    setIsLikeList(newState);
+    document.querySelector('#root')?.setAttribute('class', newState ? 'like-mode' : 'dislike-mode');
   }
 
   return (
